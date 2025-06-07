@@ -3,4 +3,4 @@
 pub mod client;
 
 // Re-export the main client
-pub use client::{HttpClient, RetryConfig, TimeoutConfig, HttpConfig}; 
+pub use client::{HttpClient, HttpConfig, RetryConfig, TimeoutConfig};

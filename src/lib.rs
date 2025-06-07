@@ -25,23 +25,21 @@
 //! }
 //! ```
 
+pub mod api;
 pub mod client;
 pub mod error;
-pub mod models;
 pub mod http;
-pub mod api;
+pub mod models;
 
 // Re-export main types for convenience
+pub use api::files::{File, FilesApi};
 pub use client::Client;
 pub use error::{Error, Result};
-pub use http::{RetryConfig, TimeoutConfig, HttpConfig};
+pub use http::{HttpConfig, RetryConfig, TimeoutConfig};
 pub use models::{
+    file::{FileEncodingStrategy, FileInput, FileOutput},
     prediction::{Prediction, PredictionStatus},
-    file::{FileInput, FileOutput, FileEncodingStrategy},
 };
-pub use api::files::{File, FilesApi};
 
 // Version information
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
-
-

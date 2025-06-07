@@ -1,5 +1,5 @@
 //! Demonstration of retry logic and exponential backoff in the Replicate client.
-//! 
+//!
 //! This example shows how the client automatically retries failed requests
 //! with exponential backoff when encountering transient errors.
 
@@ -12,7 +12,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Create client with built-in retry logic
     let client = Client::from_env()?;
-    
+
     println!("📋 Client Configuration:");
     println!("   • Max retries: 3");
     println!("   • Min delay: 500ms");
@@ -38,7 +38,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Test 2: Request to invalid endpoint (will trigger retries)
     println!("🔄 Test 2: Request to invalid endpoint (demonstrates retry logic)");
     let start = Instant::now();
-    
+
     // This will fail and trigger retries
     let invalid_client = Client::new("invalid_token_that_will_fail")?;
     match invalid_client.predictions().list(None).await {
@@ -49,7 +49,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let duration = start.elapsed();
             println!("   ✓ Failed as expected after retries in {:?}", duration);
             println!("   ✓ Error: {}", e);
-            
+
             // The duration should be longer due to retries with exponential backoff
             if duration.as_millis() > 1000 {
                 println!("   ✓ Retry logic engaged (took longer than 1s)");
@@ -73,21 +73,21 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Test 4: Dynamic retry configuration
     println!("🔧 Test 4: Dynamic retry configuration");
     println!("   Configuring more aggressive retry settings...");
-    
+
     let mut client_clone = client.clone();
     client_clone.configure_retries(
-        5,                               // max_retries
-        Duration::from_millis(100),      // min_delay  
-        Duration::from_secs(60),         // max_delay
+        5,                          // max_retries
+        Duration::from_millis(100), // min_delay
+        Duration::from_secs(60),    // max_delay
     )?;
-    
+
     let new_config = client_clone.http_client().retry_config();
     println!("   ✓ Updated configuration:");
     println!("     • Max retries: {} (was 3)", new_config.max_retries);
     println!("     • Min delay: {:?} (was 500ms)", new_config.min_delay);
     println!("     • Max delay: {:?} (was 30s)", new_config.max_delay);
     println!();
-    
+
     // Test 5: Custom RetryConfig
     println!("🎛️ Test 5: Creating client with custom RetryConfig");
     let custom_config = RetryConfig {
@@ -96,14 +96,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         max_delay: Duration::from_secs(10),
         base_multiplier: 3,
     };
-    
+
     println!("   Custom configuration:");
     println!("     • Max retries: {}", custom_config.max_retries);
     println!("     • Min delay: {:?}", custom_config.min_delay);
     println!("     • Max delay: {:?}", custom_config.max_delay);
     println!("     • Base multiplier: {}x", custom_config.base_multiplier);
     println!();
-    
+
     // Test 6: Error types and retry behavior
     println!("📚 Test 6: Error types and retry behavior");
     println!("   Errors that trigger retries:");
@@ -132,4 +132,4 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("   • RetryConfig struct - Custom configurations");
 
     Ok(())
-} 
+}

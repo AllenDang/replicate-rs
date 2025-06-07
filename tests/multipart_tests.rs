@@ -1,6 +1,6 @@
 //! Integration tests for multipart file upload functionality.
 
-use replicate_rs::{Client, FileInput, Error};
+use replicate_rs::{Client, Error, FileInput};
 use std::collections::HashMap;
 use tempfile::tempdir;
 
@@ -23,15 +23,24 @@ async fn test_file_upload_from_bytes() {
 
     let file_content = b"Test file content for multipart upload";
     let mut metadata = HashMap::new();
-    metadata.insert("test".to_string(), serde_json::Value::String("multipart_test".to_string()));
-    metadata.insert("source".to_string(), serde_json::Value::String("unit_test".to_string()));
+    metadata.insert(
+        "test".to_string(),
+        serde_json::Value::String("multipart_test".to_string()),
+    );
+    metadata.insert(
+        "source".to_string(),
+        serde_json::Value::String("unit_test".to_string()),
+    );
 
-    let result = client.files().create_from_bytes(
-        file_content,
-        Some("test_upload.txt"),
-        Some("text/plain"),
-        Some(&metadata),
-    ).await;
+    let result = client
+        .files()
+        .create_from_bytes(
+            file_content,
+            Some("test_upload.txt"),
+            Some("text/plain"),
+            Some(&metadata),
+        )
+        .await;
 
     match result {
         Ok(file) => {
@@ -40,11 +49,17 @@ async fn test_file_upload_from_bytes() {
             assert_eq!(file.size, file_content.len() as i64);
             assert!(!file.id.is_empty());
             assert!(!file.etag.is_empty());
-            
+
             // Verify metadata
-            assert_eq!(file.metadata.get("test").unwrap().as_str().unwrap(), "multipart_test");
-            assert_eq!(file.metadata.get("source").unwrap().as_str().unwrap(), "unit_test");
-            
+            assert_eq!(
+                file.metadata.get("test").unwrap().as_str().unwrap(),
+                "multipart_test"
+            );
+            assert_eq!(
+                file.metadata.get("source").unwrap().as_str().unwrap(),
+                "unit_test"
+            );
+
             // Clean up
             let deleted = client.files().delete(&file.id).await.unwrap_or(false);
             assert!(deleted, "File should be deleted successfully");
@@ -70,7 +85,9 @@ async fn test_file_upload_from_path() {
     let temp_dir = tempdir().expect("Failed to create temp dir");
     let file_path = temp_dir.path().join("test_file.txt");
     let file_content = b"Content from file path upload test";
-    tokio::fs::write(&file_path, file_content).await.expect("Failed to write temp file");
+    tokio::fs::write(&file_path, file_content)
+        .await
+        .expect("Failed to write temp file");
 
     let result = client.files().create_from_path(&file_path, None).await;
 
@@ -79,7 +96,7 @@ async fn test_file_upload_from_path() {
             assert_eq!(file.name, "test_file.txt");
             assert_eq!(file.content_type, "text/plain");
             assert_eq!(file.size, file_content.len() as i64);
-            
+
             // Clean up
             let deleted = client.files().delete(&file.id).await.unwrap_or(false);
             assert!(deleted, "File should be deleted successfully");
@@ -109,13 +126,16 @@ async fn test_file_upload_via_file_input() {
         Some("text/plain".to_string()),
     );
 
-    let result = client.files().create_from_file_input(&file_input, None).await;
+    let result = client
+        .files()
+        .create_from_file_input(&file_input, None)
+        .await;
 
     match result {
         Ok(file) => {
             assert_eq!(file.name, "fileinput_test.txt");
             assert_eq!(file.content_type, "text/plain");
-            
+
             // Clean up
             let deleted = client.files().delete(&file.id).await.unwrap_or(false);
             assert!(deleted, "File should be deleted successfully");
@@ -139,12 +159,18 @@ async fn test_file_error_handling() {
 
     // Test FileInput with URL (should fail for upload)
     let url_input = FileInput::from_url("https://example.com/test.jpg");
-    let result = client.files().create_from_file_input(&url_input, None).await;
+    let result = client
+        .files()
+        .create_from_file_input(&url_input, None)
+        .await;
     assert!(result.is_err(), "Uploading from URL should fail");
-    
+
     if let Err(Error::InvalidInput(msg)) = result {
-        assert!(msg.contains("Cannot upload from URL"), "Error message should mention URL limitation");
+        assert!(
+            msg.contains("Cannot upload from URL"),
+            "Error message should mention URL limitation"
+        );
     } else {
         panic!("Expected InvalidInput error for URL upload");
     }
-} 
+}

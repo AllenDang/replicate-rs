@@ -5,10 +5,10 @@ use replicate_rs::Client;
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("🔍 Testing API token...");
-    
+
     let client = Client::from_env()?;
     println!("✅ Client created successfully");
-    
+
     // Try to list predictions (this should work with any valid token)
     match client.predictions().list(None).await {
         Ok(predictions) => {
@@ -20,7 +20,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             return Err(e.into());
         }
     }
-    
+
     println!("🎉 Token test completed successfully!");
     Ok(())
-} 
+}

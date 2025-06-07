@@ -1,8 +1,8 @@
 //! API operation implementations.
 
-pub mod predictions;
 pub mod files;
+pub mod predictions;
 
 // Re-export main API components
+pub use files::{File, FilesApi};
 pub use predictions::PredictionsApi;
-pub use files::{FilesApi, File}; 

@@ -26,17 +26,17 @@ impl<T> PaginatedResponse<T> {
     pub fn has_next(&self) -> bool {
         self.next.is_some()
     }
-    
+
     /// Check if there are previous pages
     pub fn has_previous(&self) -> bool {
         self.previous.is_some()
     }
-    
+
     /// Get the number of results in this page
     pub fn len(&self) -> usize {
         self.results.len()
     }
-    
+
     /// Check if this page is empty
     pub fn is_empty(&self) -> bool {
         self.results.is_empty()
@@ -93,4 +93,4 @@ impl Model {
     pub fn identifier(&self) -> String {
         format!("{}/{}", self.owner, self.name)
     }
-} 
+}

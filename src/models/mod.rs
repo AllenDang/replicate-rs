@@ -1,10 +1,10 @@
 //! Data models and types for the Replicate API.
 
-pub mod prediction;
-pub mod file;
 pub mod common;
+pub mod file;
+pub mod prediction;
 
 // Re-export commonly used types
-pub use prediction::{Prediction, PredictionStatus, CreatePredictionRequest};
+pub use common::{ApiResponse, PaginatedResponse};
 pub use file::{FileInput, FileOutput};
-pub use common::{ApiResponse, PaginatedResponse}; 
+pub use prediction::{CreatePredictionRequest, Prediction, PredictionStatus};

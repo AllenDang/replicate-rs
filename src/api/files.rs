@@ -1,12 +1,12 @@
 //! Files API for uploading and managing files.
 
-use std::collections::HashMap;
-use std::path::Path;
-use serde::{Deserialize, Serialize};
-use base64::{Engine as _, engine::general_purpose};
 use crate::error::{Error, Result};
 use crate::http::HttpClient;
-use crate::models::file::{FileInput, FileEncodingStrategy};
+use crate::models::file::{FileEncodingStrategy, FileInput};
+use base64::{Engine as _, engine::general_purpose};
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
+use std::path::Path;
 
 /// Represents a file uploaded to Replicate.
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -53,12 +53,8 @@ impl FilesApi {
         content_type: Option<&str>,
         metadata: Option<&HashMap<String, serde_json::Value>>,
     ) -> Result<File> {
-        let form = HttpClient::create_file_form(
-            file_content,
-            filename,
-            content_type,
-            metadata,
-        ).await?;
+        let form =
+            HttpClient::create_file_form(file_content, filename, content_type, metadata).await?;
 
         self.http.post_multipart_json("/v1/files", form).await
     }
@@ -80,22 +76,18 @@ impl FilesApi {
         metadata: Option<&HashMap<String, serde_json::Value>>,
     ) -> Result<File> {
         match file_input {
-            FileInput::Path(path) => {
-                self.create_from_path(path, metadata).await
+            FileInput::Path(path) => self.create_from_path(path, metadata).await,
+            FileInput::Bytes {
+                data,
+                filename,
+                content_type,
+            } => {
+                self.create_from_bytes(data, filename.as_deref(), content_type.as_deref(), metadata)
+                    .await
             }
-            FileInput::Bytes { data, filename, content_type } => {
-                self.create_from_bytes(
-                    data,
-                    filename.as_deref(),
-                    content_type.as_deref(),
-                    metadata,
-                ).await
-            }
-            FileInput::Url(_) => {
-                Err(Error::InvalidInput(
-                    "Cannot upload from URL - file must be local or bytes".to_string()
-                ))
-            }
+            FileInput::Url(_) => Err(Error::InvalidInput(
+                "Cannot upload from URL - file must be local or bytes".to_string(),
+            )),
         }
     }
 
@@ -129,9 +121,7 @@ pub async fn process_file_input(
     files_api: Option<&FilesApi>,
 ) -> Result<String> {
     match encoding_strategy {
-        FileEncodingStrategy::Base64DataUrl => {
-            encode_file_as_data_url(file_input).await
-        }
+        FileEncodingStrategy::Base64DataUrl => encode_file_as_data_url(file_input).await,
         FileEncodingStrategy::Multipart => {
             if let Some(api) = files_api {
                 let file = api.create_from_file_input(file_input, None).await?;
@@ -142,7 +132,7 @@ pub async fn process_file_input(
                     .ok_or_else(|| Error::InvalidInput("File missing URL".to_string()))
             } else {
                 Err(Error::InvalidInput(
-                    "Files API required for multipart upload".to_string()
+                    "Files API required for multipart upload".to_string(),
                 ))
             }
         }
@@ -155,7 +145,7 @@ async fn encode_file_as_data_url(file_input: &FileInput) -> Result<String> {
         FileInput::Url(_url) => {
             // For URLs, we can't encode as data URL without downloading
             Err(Error::InvalidInput(
-                "Cannot encode URL as data URL without downloading".to_string()
+                "Cannot encode URL as data URL without downloading".to_string(),
             ))
         }
         FileInput::Path(path) => {
@@ -163,15 +153,17 @@ async fn encode_file_as_data_url(file_input: &FileInput) -> Result<String> {
             let content_type = mime_guess::from_path(path)
                 .first_or_octet_stream()
                 .to_string();
-            
+
             let encoded = general_purpose::STANDARD.encode(&content);
             Ok(format!("data:{};base64,{}", content_type, encoded))
         }
-        FileInput::Bytes { data, content_type, .. } => {
+        FileInput::Bytes {
+            data, content_type, ..
+        } => {
             let content_type = content_type
                 .as_deref()
                 .unwrap_or("application/octet-stream");
-            
+
             let encoded = general_purpose::STANDARD.encode(data);
             Ok(format!("data:{};base64,{}", content_type, encoded))
         }
@@ -203,8 +195,8 @@ mod tests {
 
         let file_input = FileInput::from_path(&file_path);
         let data_url = encode_file_as_data_url(&file_input).await.unwrap();
-        
+
         assert!(data_url.starts_with("data:text/plain;base64,"));
         assert!(data_url.contains("VGVzdCBjb250ZW50")); // "Test content" in base64
     }
-} 
+}

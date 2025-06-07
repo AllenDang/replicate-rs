@@ -1,8 +1,8 @@
 //! File handling types for inputs and outputs.
 
-use std::path::{Path, PathBuf};
-use serde::{Deserialize, Serialize};
 use bytes::Bytes;
+use serde::{Deserialize, Serialize};
+use std::path::{Path, PathBuf};
 
 /// Represents different ways to provide file input to a model.
 #[derive(Debug, Clone)]
@@ -24,12 +24,12 @@ impl FileInput {
     pub fn from_url(url: impl Into<String>) -> Self {
         Self::Url(url.into())
     }
-    
+
     /// Create a file input from a local path
     pub fn from_path(path: impl AsRef<Path>) -> Self {
         Self::Path(path.as_ref().to_path_buf())
     }
-    
+
     /// Create a file input from raw bytes
     pub fn from_bytes(data: impl Into<Bytes>) -> Self {
         Self::Bytes {
@@ -38,7 +38,7 @@ impl FileInput {
             content_type: None,
         }
     }
-    
+
     /// Create a file input from bytes with metadata
     pub fn from_bytes_with_metadata(
         data: impl Into<Bytes>,
@@ -51,22 +51,22 @@ impl FileInput {
             content_type,
         }
     }
-    
+
     /// Check if this is a URL input
     pub fn is_url(&self) -> bool {
         matches!(self, Self::Url(_))
     }
-    
+
     /// Check if this is a file path input
     pub fn is_path(&self) -> bool {
         matches!(self, Self::Path(_))
     }
-    
+
     /// Check if this is a bytes input
     pub fn is_bytes(&self) -> bool {
         matches!(self, Self::Bytes { .. })
     }
-    
+
     /// Get the URL if this is a URL input
     pub fn as_url(&self) -> Option<&str> {
         match self {
@@ -74,7 +74,7 @@ impl FileInput {
             _ => None,
         }
     }
-    
+
     /// Get the path if this is a path input
     pub fn as_path(&self) -> Option<&Path> {
         match self {
@@ -135,32 +135,32 @@ impl FileOutput {
             size: None,
         }
     }
-    
+
     /// Set the filename
     pub fn with_filename(mut self, filename: impl Into<String>) -> Self {
         self.filename = Some(filename.into());
         self
     }
-    
+
     /// Set the content type
     pub fn with_content_type(mut self, content_type: impl Into<String>) -> Self {
         self.content_type = Some(content_type.into());
         self
     }
-    
+
     /// Set the file size
     pub fn with_size(mut self, size: u64) -> Self {
         self.size = Some(size);
         self
     }
-    
+
     /// Download the file as bytes
     pub async fn download(&self) -> crate::Result<Bytes> {
         let response = reqwest::get(&self.url).await?;
         let bytes = response.bytes().await?;
         Ok(bytes)
     }
-    
+
     /// Save the file to a local path
     pub async fn save_to_path(&self, path: impl AsRef<Path>) -> crate::Result<()> {
         let bytes = self.download().await?;
@@ -195,4 +195,4 @@ impl Default for FileEncodingStrategy {
     fn default() -> Self {
         Self::Multipart
     }
-} 
+}
