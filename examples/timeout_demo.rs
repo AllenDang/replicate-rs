@@ -1,4 +1,4 @@
-use replicate_rs::{Client, HttpConfig, RetryConfig, TimeoutConfig};
+use replicate_client::{Client, HttpConfig, RetryConfig, TimeoutConfig};
 use std::time::{Duration, Instant};
 
 #[tokio::main]

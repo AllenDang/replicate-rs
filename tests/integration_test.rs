@@ -1,4 +1,4 @@
-use replicate_rs::{Client, Error};
+use replicate_client::{Client, Error};
 
 #[tokio::test]
 async fn test_api_token_validation() -> Result<(), Error> {

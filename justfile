@@ -1,4 +1,4 @@
-# Justfile for replicate-rs
+# Justfile for replicate-client
 
 # Default recipe to list available commands
 default:
@@ -48,7 +48,7 @@ release: pre-release
     # Get current version from Cargo.toml
     current_version=$(cargo pkgid | cut -d# -f2)
     
-    echo "🚀 Releasing replicate-rs v${current_version} to crates.io..."
+    echo "🚀 Releasing replicate-client v${current_version} to crates.io..."
     
     # Ensure we're on a clean git state
     if [ -n "$(git status --porcelain)" ]; then
@@ -70,8 +70,8 @@ release: pre-release
     # Publish to crates.io
     cargo publish
     
-    echo "✅ Successfully released replicate-rs v${current_version} to crates.io!"
-    echo "📦 View at: https://crates.io/crates/replicate-rs"
+    echo "✅ Successfully released replicate-client v${current_version} to crates.io!"
+    echo "📦 View at: https://crates.io/crates/replicate-client"
 
 # Dry run release (check what would be published)
 release-dry-run: pre-release

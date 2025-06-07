@@ -7,7 +7,7 @@
 //!
 //! Run with: cargo run --example basic_prediction
 
-use replicate_rs::Client;
+use replicate_client::Client;
 use std::time::Duration;
 
 #[tokio::main]

@@ -7,7 +7,7 @@
 //!
 //! Run with: cargo run --example file_handling
 
-use replicate_rs::{Client, FileInput, FileOutput};
+use replicate_client::{Client, FileInput, FileOutput};
 use tempfile::tempdir;
 
 #[tokio::main]

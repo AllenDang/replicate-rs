@@ -47,7 +47,7 @@ tokio = { version = "1.0", features = ["full"] }
 ```
 
 ```rust
-use replicate_rs::{Client, Error};
+use replicate_client::{Client, Error};
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
@@ -72,7 +72,7 @@ async fn main() -> Result<(), Error> {
 The client includes built-in retry logic with exponential backoff for handling transient failures:
 
 ```rust
-use replicate_rs::{Client, RetryConfig};
+use replicate_client::{Client, RetryConfig};
 use std::time::Duration;
 
 // Create client with custom retry settings
@@ -99,7 +99,7 @@ client.configure_retries(
 Configure connection and request timeouts for better control over network operations:
 
 ```rust
-use replicate_rs::{Client, TimeoutConfig, HttpConfig, RetryConfig};
+use replicate_client::{Client, TimeoutConfig, HttpConfig, RetryConfig};
 use std::time::Duration;
 
 // Configure timeouts on existing client
@@ -136,7 +136,7 @@ The library provides comprehensive file handling with multipart form data suppor
 ### Basic File Upload
 
 ```rust
-use replicate_rs::{Client, FileInput, FileEncodingStrategy};
+use replicate_client::{Client, FileInput, FileEncodingStrategy};
 use std::collections::HashMap;
 
 let client = Client::new("your-api-token")?;

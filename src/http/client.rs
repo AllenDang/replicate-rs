@@ -281,7 +281,7 @@ impl HttpClient {
     /// # Examples
     ///
     /// ```no_run
-    /// # use replicate_rs::Client;
+    /// # use replicate_client::Client;
     /// # use std::time::Duration;
     /// # #[tokio::main]
     /// # async fn main() -> Result<(), Box<dyn std::error::Error>> {

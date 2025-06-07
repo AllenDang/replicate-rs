@@ -8,7 +8,7 @@
 //!
 //! Run with: cargo run --example multipart_upload
 
-use replicate_rs::{Client, FileInput};
+use replicate_client::{Client, FileInput};
 use std::collections::HashMap;
 use tempfile::tempdir;
 

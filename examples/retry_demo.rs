@@ -3,7 +3,7 @@
 //! This example shows how the client automatically retries failed requests
 //! with exponential backoff when encountering transient errors.
 
-use replicate_rs::{Client, RetryConfig};
+use replicate_client::{Client, RetryConfig};
 use std::time::{Duration, Instant};
 
 #[tokio::main]

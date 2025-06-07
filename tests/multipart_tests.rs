@@ -1,6 +1,6 @@
 //! Integration tests for multipart file upload functionality.
 
-use replicate_rs::{Client, Error, FileInput};
+use replicate_client::{Client, Error, FileInput};
 use std::collections::HashMap;
 use tempfile::tempdir;
 

@@ -67,7 +67,7 @@ impl Client {
     /// # Examples
     ///
     /// ```no_run
-    /// # use replicate_rs::Client;
+    /// # use replicate_client::Client;
     /// # #[tokio::main]
     /// # async fn main() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new("your-api-token")?;
@@ -95,7 +95,7 @@ impl Client {
     /// # Examples
     ///
     /// ```no_run
-    /// # use replicate_rs::Client;
+    /// # use replicate_client::Client;
     /// # #[tokio::main]
     /// # async fn main() -> Result<(), Box<dyn std::error::Error>> {
     /// let client = Client::new("your-api-token")?;
@@ -133,7 +133,7 @@ impl Client {
     /// # Examples
     ///
     /// ```no_run
-    /// # use replicate_rs::Client;
+    /// # use replicate_client::Client;
     /// # use std::time::Duration;
     /// # #[tokio::main]
     /// # async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -165,7 +165,7 @@ impl Client {
     /// # Examples
     ///
     /// ```no_run
-    /// # use replicate_rs::Client;
+    /// # use replicate_client::Client;
     /// # use std::time::Duration;
     /// # #[tokio::main]
     /// # async fn main() -> Result<(), Box<dyn std::error::Error>> {

@@ -1,6 +1,6 @@
 //! Simple test to verify API token works.
 
-use replicate_rs::Client;
+use replicate_client::Client;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {

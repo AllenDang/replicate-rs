@@ -6,7 +6,7 @@
 //! ## Quick Start
 //!
 //! ```no_run
-//! use replicate_rs::{Client, Error};
+//! use replicate_client::{Client, Error};
 //!
 //! #[tokio::main]
 //! async fn main() -> Result<(), Error> {
