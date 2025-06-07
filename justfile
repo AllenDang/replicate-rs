@@ -46,7 +46,7 @@ release: pre-release
     set -euo pipefail
     
     # Get current version from Cargo.toml
-    current_version=$(cargo pkgid | cut -d@ -f2)
+    current_version=$(cargo pkgid | cut -d# -f2)
     
     echo "🚀 Releasing replicate-rs v${current_version} to crates.io..."
     
