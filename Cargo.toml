@@ -1,0 +1,36 @@
+[package]
+name = "replicate-rs"
+version = "0.1.0"
+edition = "2024"
+authors = ["Allen Dang <allengnr@gmail.com>"]
+description = "Rust client library for Replicate AI"
+license = "MIT"
+repository = "https://github.com/AllenDang/replicate-rs"
+keywords = ["ai", "machine-learning", "api", "replicate"]
+categories = ["api-bindings", "web-programming::http-client"]
+
+[dependencies]
+tokio = { version = "1.0", features = ["full"] }
+reqwest = { version = "0.12", features = ["json", "stream", "multipart"] }
+reqwest-middleware = "0.4"
+reqwest-retry = "0.7"
+retry-policies = "0.4"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+url = "2.0"
+futures = "0.3"
+bytes = "1.0"
+thiserror = "2.0"
+tracing = "0.1"
+uuid = { version = "1.0", features = ["v4"] }
+mime = "0.3"
+mime_guess = "2.0"
+base64 = "0.22"
+http = "1.0"
+
+[dev-dependencies]
+tokio-test = "0.4"
+mockito = "1.0"
+wiremock = "0.6"
+tempfile = "3.0"
+tracing-subscriber = "0.3"
